@@ -5,10 +5,8 @@ from fastapi import FastAPI, HTTPException, status
 
 from app.database import mongo
 from app.models.property import Property, PaginatedPropertyResponse, PaginationInfo
-from app.routers import properties
 
 app = FastAPI()
-app.include_router(properties.router)
 
 
 @app.get("/")
