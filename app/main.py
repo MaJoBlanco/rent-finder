@@ -6,6 +6,9 @@ from fastapi import FastAPI, HTTPException, status
 from app.database import mongo
 from app.models.property import Property, PaginatedPropertyResponse, PaginationInfo
 from app.routers import properties
+from app.crud.property_crud import update_property, delete_property
+
+
 
 app = FastAPI()
 app.include_router(properties.router)
@@ -90,3 +93,18 @@ async def create_property(property_in: Property):
         raise HTTPException(status_code=500, detail="No se pudo crear la propiedad")
     property_dict["_id"] = str(result.inserted_id)
     return Property(**property_dict)
+
+@app.put("/properties/{property_id}", response_model=Property)
+async def update_existing_property(property_id: str, updated_data: dict):
+    updated = await update_property(property_id, updated_data)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Propiedad no encontrada o sin cambios")
+    updated["_id"] = str(updated["_id"])
+    return updated
+
+@app.delete("/properties/{property_id}")
+async def delete_existing_property(property_id: str):
+    success = await delete_property(property_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Propiedad no encontrada")
+    return {"message": "Propiedad eliminada exitosamente"}

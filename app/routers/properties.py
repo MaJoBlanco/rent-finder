@@ -2,6 +2,10 @@ from fastapi import APIRouter, Query
 from typing import Optional, List
 from app.database.mongo import collection
 from app.models.property import Property
+from fastapi import HTTPException
+from bson import ObjectId
+from app.crud.property_crud import update_property, delete_property
+
 
 router = APIRouter()
 
@@ -34,3 +38,7 @@ async def get_properties(
         results.append(doc)
 
     return results
+
+
+
+
