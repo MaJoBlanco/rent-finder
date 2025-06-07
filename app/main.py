@@ -11,7 +11,6 @@ from app.crud.property_crud import update_property, delete_property
 
 
 app = FastAPI()
-app.include_router(properties.router)
 
 
 @app.get("/")
