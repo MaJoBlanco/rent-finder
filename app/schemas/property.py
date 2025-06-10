@@ -1,3 +1,4 @@
+# /app/schemas/property.py
 from pydantic import BaseModel
 
 class PropertyBase(BaseModel):

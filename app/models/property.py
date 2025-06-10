@@ -1,3 +1,4 @@
+# /app/models/property.py
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, List
 from bson import Decimal128
