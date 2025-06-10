@@ -23,7 +23,7 @@ class Property(BaseModel):
     summary: Optional[str] # Descripción breve de la propiedad
 
     # AHORA los siguientes campos tendrán default=None → dejan de ser “requeridos”
-    property_type: Optional[str] = Field(alias="property", default=None)
+    property_type: Optional[str] = Field(alias="property_type", default=None)
     bedrooms: Optional[int] = None
     bathrooms: Optional[float] = None
     price: Optional[str] = None

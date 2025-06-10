@@ -65,7 +65,7 @@ async def search_properties(
 ):
     query = {}
     if property_type:
-        query["property"] = property_type  # Usamos "property" como está en la BD
+        query["property_type"] = property_type  # Usamos "property" como está en la BD
     if min_bedrooms:
         query["bedrooms"] = {"$gte": min_bedrooms}
     if max_price:

@@ -15,19 +15,19 @@ async def get_all_properties():
 
 async def update_property(property_id: str, updated_data: dict):
     result = await mongo.collection.update_one(
-        {"_id": ObjectId(property_id)},
+        {"_id": property_id},
         {"$set": updated_data}
     )
 
     if result.modified_count == 0:
         return None
 
-    updated_doc = await mongo.collection.find_one({"_id": ObjectId(property_id)})
+    updated_doc = await mongo.collection.find_one({"_id": property_id})
     return updated_doc
 
 
 async def delete_property(property_id: str):
-    result = await mongo.collection.delete_one({"_id": ObjectId(property_id)})
+    result = await mongo.collection.delete_one({"_id": property_id})
     return result.deleted_count > 0
 
 
