@@ -9,10 +9,17 @@ from app.models.property import Property, PaginatedPropertyResponse, PaginationI
 from app.routers import properties
 from app.crud.property_crud import update_property, delete_property
 
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Dirección del frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
