@@ -33,6 +33,9 @@ def parse_property(doc: Dict[str, Any]) -> Dict[str, Any]:
         doc["bathrooms"] = float(doc["bathrooms"])
     if "price" in doc and isinstance(doc["price"], decimal.Decimal):
         doc["price"] = str(doc["price"])
+        # Extrae images.picture_url y lo mapea a pictures_url
+    if "images" in doc and isinstance(doc["images"], dict):
+        doc["picture_url"] = doc["images"].get("picture_url")
     return doc
 
 
@@ -66,6 +69,8 @@ async def get_paginated_properties(
 @app.get("/search", response_model=PaginatedPropertyResponse)
 async def search_properties(
         property_type: Optional[str] = None,
+        name: Optional[str] = None,
+        id: Optional[str] = None,
         min_bedrooms: Optional[int] = None,
         max_price: Optional[float] = None,
         page: int = 1,
@@ -74,6 +79,10 @@ async def search_properties(
     query = {}
     if property_type:
         query["property_type"] = property_type  # Usamos "property" como está en la BD
+    if name:
+        query["name"] = name
+    if id:
+        query["_id"] = id
     if min_bedrooms:
         query["bedrooms"] = {"$gte": min_bedrooms}
     if max_price:

@@ -29,7 +29,7 @@ class Property(BaseModel):
     bathrooms: Optional[float] = None
     price: Optional[str] = None
     address: Optional[Address] = None
-    pictures_url: Optional[str] = Field(alias="images.pictures_url", default=None)
+    picture_url: Optional[str] = None
     amenities: Optional[List[str]] = None
     review_scores_rating: Optional[float] = Field(alias="review_scores.review_scores_rating", default=None)
 
