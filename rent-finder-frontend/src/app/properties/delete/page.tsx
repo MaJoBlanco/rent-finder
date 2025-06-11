@@ -2,47 +2,49 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { searchPropertiesByQuery, deletePropertyById } from "@/services/api";
 import { Property } from "@/types/property";
 
 export default function DeletePropertyPage() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [properties, setProperties] = useState<Property[]>([]);
   const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
-  const delayDebounce = setTimeout(async () => {
-    const query = search.trim();
-    if (!query) {
-      setProperties([]);
-      return;
-    }
+    const delayDebounce = setTimeout(async () => {
+      const query = search.trim();
+      if (!query) {
+        setProperties([]);
+        return;
+      }
 
-    try {
-      // Realiza dos búsquedas: una por nombre y otra por ID
-      const [byName, byId] = await Promise.all([
-        searchPropertiesByQuery(query, undefined),
-        searchPropertiesByQuery(undefined, query)
-      ]);
+      try {
+        // Realiza dos búsquedas: una por nombre y otra por ID
+        const [byName, byId] = await Promise.all([
+          searchPropertiesByQuery(query, undefined),
+          searchPropertiesByQuery(undefined, query)
+        ]);
 
-      // Combina los resultados sin duplicados (por _id o id)
-      const combinedMap = new Map();
-      [...byName, ...byId].forEach((p) => {
-        const key = p._id || p.id;
-        if (!combinedMap.has(key)) {
-          combinedMap.set(key, p);
-        }
-      });
+        // Combina los resultados sin duplicados (por _id o id)
+        const combinedMap = new Map();
+        [...byName, ...byId].forEach((p) => {
+          const key = p._id || p.id;
+          if (!combinedMap.has(key)) {
+            combinedMap.set(key, p);
+          }
+        });
 
-      setProperties(Array.from(combinedMap.values()));
-    } catch (err) {
-      console.error(err);
-      setProperties([]);
-    }
-  }, 300);
+        setProperties(Array.from(combinedMap.values()));
+      } catch (err) {
+        console.error(err);
+        setProperties([]);
+      }
+    }, 300);
 
-  return () => clearTimeout(delayDebounce);
-}, [search]);
+    return () => clearTimeout(delayDebounce);
+  }, [search]);
 
 
   const handleDelete = async (id: string) => {
@@ -61,6 +63,14 @@ export default function DeletePropertyPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10">
+      <div className="mb-6 text-left">
+        <button
+          onClick={() => router.push("/properties")}
+          className="text-sm text-blue-600 hover:underline"
+        >
+          ← Volver a propiedades
+        </button>
+      </div>
       <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Eliminar Propiedad</h1>
 
       <input

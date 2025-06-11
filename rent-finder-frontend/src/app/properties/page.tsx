@@ -86,9 +86,9 @@ export default function HomePage() {
       </div>
 
       {/* Filtros */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
         <input name="name" placeholder="Nombre" className="p-2 border rounded" onChange={handleChange} />
-        <input name="searchId" type="text" placeholder="Buscar por ID" value={searchId} onChange={(e) => setSearchId(e.target.value)} className="w-full px-4 py-2 border rounded"/>
+        <input name="searchId" type="text" placeholder="Buscar por ID" value={searchId} onChange={(e) => setSearchId(e.target.value)} className="w-full px-4 py-2 border rounded" />
         <input name="property_type" placeholder="Tipo" className="p-2 border rounded" onChange={handleChange} />
         <input name="min_bedrooms" type="number" placeholder="Mín. Dormitorios" className="p-2 border rounded" onChange={handleChange} />
         <input name="bathrooms" type="number" step="0.5" placeholder="Baños" className="p-2 border rounded" onChange={handleChange} />

@@ -4,10 +4,12 @@
 import { useEffect, useState } from "react";
 import { fetchProperties, updateProperty } from "@/services/api";
 import { Property } from "@/types/property";
+import { useRouter } from "next/navigation";
 import { searchPropertiesByName } from "@/services/api";
 
 
 export default function EditPropertyPage() {
+    const router = useRouter();
     const [properties, setProperties] = useState<Property[]>([]);
     const [search, setSearch] = useState("");
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
@@ -93,6 +95,14 @@ export default function EditPropertyPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 px-6 py-10">
+            <div className="mb-6 text-left">
+                <button
+                    onClick={() => router.push("/properties")}
+                    className="text-sm text-blue-600 hover:underline"
+                >
+                    ← Volver a propiedades
+                </button>
+            </div>
             <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Editar Propiedad</h1>
 
             <div className="mb-6">
