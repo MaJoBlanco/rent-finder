@@ -50,3 +50,20 @@ export async function searchPropertiesByName(name: string): Promise<Property[]> 
   const data = await res.json();
   return data.properties;
 }
+
+export async function deletePropertyById(id: string) {
+  const res = await fetch(`http://localhost:8000/properties/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Error al eliminar la propiedad");
+}
+
+export async function searchPropertiesByQuery(name?: string, id?: string): Promise<Property[]> {
+  const params = new URLSearchParams();
+  if (name) params.append("name", name);
+  if (id) params.append("id", id);
+  const res = await fetch(`${API_BASE}/search?${params}`);
+  if (!res.ok) throw new Error("Error buscando propiedades");
+  const data = await res.json();
+  return data.properties;
+}
