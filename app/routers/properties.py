@@ -10,6 +10,9 @@ from app.crud.property_crud import update_property, delete_property
 
 router = APIRouter()
 
+def parse_id(property_id: str):
+    return ObjectId(property_id) if ObjectId.is_valid(property_id) and len(property_id) == 24 else property_id
+
 @router.get("/properties", response_model=List[Property])
 async def get_properties(
     property_type: Optional[str] = None,

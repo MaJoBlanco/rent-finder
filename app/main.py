@@ -10,6 +10,7 @@ from app.routers import properties
 from app.crud.property_crud import update_property, delete_property
 
 from fastapi.middleware.cors import CORSMiddleware
+from bson import ObjectId
 
 app = FastAPI()
 
@@ -25,6 +26,8 @@ app.add_middleware(
 def root():
     return {"message": "Hola desde FastAPI!"}
 
+def parse_id(property_id: str):
+    return ObjectId(property_id) if ObjectId.is_valid(property_id) and len(property_id) == 24 else property_id
 
 def parse_property(doc: Dict[str, Any]) -> Dict[str, Any]:
     # Convierte ObjectId y Decimal128 a tipos compatibles
@@ -73,6 +76,7 @@ async def search_properties(
         id: Optional[str] = None,
         min_bedrooms: Optional[int] = None,
         max_price: Optional[float] = None,
+        bathrooms: Optional[float] = None,
         page: int = 1,
         page_size: int = 10
 ):
@@ -82,12 +86,15 @@ async def search_properties(
     if name:
         query["name"] = name
     if id:
-        query["_id"] = id
+        query["_id"] = parse_id(id)
+        return await get_paginated_properties(query, 1, 1)
     if min_bedrooms:
         query["bedrooms"] = {"$gte": min_bedrooms}
     if max_price:
         query["price"] = {
             "$lte": max_price}  # Pero cuidado: el campo price es un string tipo "$120.00", habría que convertirlo si quieres filtrar bien
+    if bathrooms is not None:
+        query["bathrooms"] = bathrooms
     return await get_paginated_properties(query, page, page_size)
 
 
@@ -124,3 +131,12 @@ async def delete_existing_property(property_id: str):
     if not success:
         raise HTTPException(status_code=404, detail="Propiedad no encontrada")
     return {"message": "Propiedad eliminada exitosamente"}
+
+@app.get("/properties/{property_id}", response_model=Property)
+async def get_property_by_id(property_id: str):
+    query_id = parse_id(property_id)
+    result = await mongo.collection.find_one({"_id": parse_id(property_id)})
+    if not result:
+        raise HTTPException(status_code=404, detail="Propiedad no encontrada")
+    result["_id"] = str(result["_id"])
+    return Property(**result)

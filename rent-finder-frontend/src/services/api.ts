@@ -58,10 +58,22 @@ export async function deletePropertyById(id: string) {
   if (!res.ok) throw new Error("Error al eliminar la propiedad");
 }
 
-export async function searchPropertiesByQuery(name?: string, id?: string): Promise<Property[]> {
+export async function searchPropertiesByQuery(
+  name?: string,
+  id?: string,
+  property_type?: string,
+  min_bedrooms?: number,
+  max_price?: number,
+  bathrooms?: number
+): Promise<Property[]> {
   const params = new URLSearchParams();
   if (name) params.append("name", name);
   if (id) params.append("id", id);
+  if (property_type) params.append("property_type", property_type);
+  if (min_bedrooms !== undefined) params.append("min_bedrooms", min_bedrooms.toString());
+  if (max_price !== undefined) params.append("max_price", max_price.toString());
+  if (bathrooms !== undefined) params.append("bathrooms", bathrooms.toString());
+
   const res = await fetch(`${API_BASE}/search?${params}`);
   if (!res.ok) throw new Error("Error buscando propiedades");
   const data = await res.json();
